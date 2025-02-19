@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Калькулятор викидів</title>
+
+  <!-- (Опційно) Bootstrap -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+  >
+</head>
+<body class="bg-light">
+
+<div class="container my-5">
+  <h1 class="mb-4">Калькулятор викидів</h1>
+
+  <form method="POST" action="/calculate" class="card p-3">
+    <!-- Вибір палива -->
+    <div class="mb-3">
+      <label for="fuelType" class="form-label">Оберіть тип палива:</label>
+      <select id="fuelType" name="fuelType" class="form-select">
+        <option value="coal">Вугілля</option>
+        <option value="oilFuel">Мазут</option>
+        <option value="gas">Газ</option>
+      </select>
+    </div>
+
+    <!-- Кількість палива -->
+    <div class="mb-3">
+      <label for="fuelAmount" class="form-label">Кількість палива (B):</label>
+      <input 
+        type="number" step="any" 
+        class="form-control" 
+        id="fuelAmount" 
+        name="fuelAmount"
+        placeholder="Наприклад, 1000" 
+        required
+      >
+    </div>
+
+    <!-- Кнопка "Порахувати" -->
+    <button type="submit" class="btn btn-primary">Порахувати</button>
+  </form>
+</div>
+
+<!-- (Optional) Bootstrap JS -->
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js">
+</script>
+</body>
+</html>
