@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Choose Cable</title>
+    <link href="styles.css" rel="stylesheet">
+</head>
+<body>
+<div class="flex-container">
+    <div class="container">
+        <h1>Вибір кабелю</h1>
+        <label for="unom">Unom:</label>
+        <input type="number" id="unom" class="input-field" />
+
+        <label for="ik">Ik:</label>
+        <input type="number" id="ik" class="input-field" />
+
+        <label for="tf">tf:</label>
+        <input type="number" id="tf" class="input-field" />
+
+        <label for="sm">Sm:</label>
+        <input type="number" id="sm" class="input-field" />
+
+        <label for="jek">jek:</label>
+        <input type="number" id="jek" class="input-field" />
+
+        <label for="ct">Ct:</label>
+        <input type="number" id="ct" class="input-field" />
+
+        <button class="button" onclick="calculateCableResult()">Calculate</button>
+
+        <div id="cable-result-container">
+            <h3>Результат вибору кабелю</h3>
+            <div id="cable-result"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Визначення струмів</h1>
+        <label for="ukmax">Ukmax:</label>
+        <input type="number" id="ukmax" class="input-field" />
+
+        <label for="uvn">Uvn:</label>
+        <input type="number" id="uvn" class="input-field" />
+
+        <label for="unn">Unn:</label>
+        <input type="number" id="unn" class="input-field" />
+
+        <label for="snomt">Snomt:</label>
+        <input type="number" id="snomt" class="input-field" />
+
+        <label for="xch">Xch:</label>
+        <input type="number" id="xch" class="input-field" />
+
+        <label for="xcmin">Xcmin:</label>
+        <input type="number" id="xcmin" class="input-field" />
+
+        <label for="rch">Rch:</label>
+        <input type="number" id="rch" class="input-field" />
+
+        <label for="rcmin">Rcmin:</label>
+        <input type="number" id="rcmin" class="input-field" />
+
+        <label for="ll">Ll:</label>
+        <input type="number" id="ll" class="input-field" />
+
+        <label for="r0">R0:</label>
+        <input type="number" id="r0" class="input-field" />
+
+        <label for="x0">X0:</label>
+        <input type="number" id="x0" class="input-field" />
+
+        <button class="button" onclick="calculateCurrentResult()">Calculate</button>
+
+        <div id="current-on-ten-result-container">
+            <h3>Результат визначення струмів</h3>
+            <div id="current-result"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>Визначення струмів на шинах 10 кВ</h1>
+
+        <label for="sk">Sk:</label>
+        <input type="number" id="sk" class="input-field" />
+
+        <label for="uch">Uch:</label>
+        <input type="number" id="uch" class="input-field" />
+
+        <label for="snomt1">Snomt:</label>
+        <input type="number" id="snomt1" class="input-field" />
+
+        <label for="uk">Uk:</label>
+        <input type="number" id="uk" class="input-field" />
+
+        <button class="button" onclick="calculateCurrentOnTenResult()">Calculate</button>
+
+        <div id="current-result-container">
+            <h3>Результат визначення струмів на шинах 10 кВ</h3>
+            <div id="current-on-ten-result"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    async function calculateCableResult() {
+        const unom = parseFloat(document.getElementById('unom').value);
+        const ik = parseFloat(document.getElementById('ik').value);
+        const tf = parseFloat(document.getElementById('tf').value);
+        const sm = parseFloat(document.getElementById('sm').value);
+        const jek = parseFloat(document.getElementById('jek').value);
+        const ct = parseFloat(document.getElementById('ct').value);
+
+        const requestData = {
+            unom,
+            ik,
+            tf,
+            sm,
+            jek,
+            ct
+        };
+
+        const response = await fetch('/api/calculate-cable', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        if (!response.ok) {
+            const error = await response.text();
+            alert('Error: ' + error);
+            return;
+        }
+
+        const result = await response.json();
+
+        const resultContainer = document.getElementById('cable-result');
+        resultContainer.innerHTML = `
+            <p>Im: ${result.im}</p>
+            <p>Impa: ${result.impa}</p>
+            <p>Sek: ${result.sek}</p>
+            <p>S: ${result.s}</p>
+        `;
+    }
+
+    async function calculateCurrentResult() {
+        const ukmax = parseFloat(document.getElementById('ukmax').value);
+        const uvn = parseFloat(document.getElementById('uvn').value);
+        const unn = parseFloat(document.getElementById('unn').value);
+        const snomt = parseFloat(document.getElementById('snomt').value);
+        const xch = parseFloat(document.getElementById('xch').value);
+        const xcmin = parseFloat(document.getElementById('xcmin').value);
+        const rch = parseFloat(document.getElementById('rch').value);
+        const rcmin = parseFloat(document.getElementById('rcmin').value);
+        const ll = parseFloat(document.getElementById('ll').value);
+        const r0 = parseFloat(document.getElementById('r0').value);
+        const x0 = parseFloat(document.getElementById('x0').value);
+
+        const requestData = {
+            ukmax,
+            uvn,
+            unn,
+            snomt,
+            xch,
+            xcmin,
+            rch,
+            rcmin,
+            ll,
+            r0,
+            x0
+        };
+
+        const response = await fetch('/api/calculate-current', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        if (!response.ok) {
+            const error = await response.text();
+            alert('Error: ' + error);
+            return;
+        }
+
+        const result = await response.json();
+
+        const resultContainer = document.getElementById('current-result');
+        resultContainer.innerHTML = `
+          <p>Rsh: ${result.Rsh}</p>
+    <p>Xsh: ${result.Xsh}</p>
+    <p>Zsh: ${result.Zsh}</p>
+    <p>Rshmin: ${result.Rshmin}</p>
+    <p>Xshmin: ${result.Xshmin}</p>
+    <p>Zshmin: ${result.Zshmin}</p>
+    <p>I3sh: ${result.I3sh}</p>
+    <p>I2sh: ${result.I2sh}</p>
+    <p>I3shmin: ${result.I3shmin}</p>
+    <p>I2shmin: ${result.I2shmin}</p>
+    <p>Kpr: ${result.Kpr}</p>
+    <p>Rshn: ${result.Rshn}</p>
+    <p>Xshn: ${result.Xshn}</p>
+    <p>Zshn: ${result.Zshn}</p>
+    <p>Rshnmin: ${result.Rshnmin}</p>
+    <p>Xshnmin: ${result.Xshnmin}</p>
+    <p>Zshnmin: ${result.Zshnmin}</p>
+    <p>I3shn: ${result.I3shn}</p>
+    <p>I2shn: ${result.I2shn}</p>
+    <p>I3shnmin: ${result.I3shnmin}</p>
+    <p>I2shnmin: ${result.I2shnmin}</p>
+    <p>Rl: ${result.Rl}</p>
+    <p>Xl: ${result.Xl}</p>
+    <p>Rcn: ${result.Rcn}</p>
+    <p>Xcn: ${result.Xcn}</p>
+    <p>Zcn: ${result.Zcn}</p>
+    <p>Rcnmin: ${result.Rcnmin}</p>
+    <p>Xcnmin: ${result.Xcnmin}</p>
+    <p>Zcnmin: ${result.Zcnmin}</p>
+    <p>I3ln: ${result.I3ln}</p>
+    <p>I2ln: ${result.I2ln}</p>
+    <p>I3lnmin: ${result.I3lnmin}</p>
+    <p>I2lnmin: ${result.I2lnmin}</p>
+        `;
+    }
+
+    async function calculateCurrentOnTenResult() {
+        const sk = parseFloat(document.getElementById('sk').value);
+        const uch = parseFloat(document.getElementById('uch').value);
+        const snomt1 = parseFloat(document.getElementById('snomt1').value);
+        const uk = parseFloat(document.getElementById('uk').value);
+
+        const requestData = {
+            sk,
+            uch,
+            snomt: snomt1,
+            uk
+        };
+
+        const response = await fetch('/api/calculate-current-on-ten', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(requestData)
+        });
+
+        if (!response.ok) {
+            const error = await response.text();
+            alert('Error: ' + error);
+            return;
+        }
+
+        const result = await response.json();
+
+        const resultContainer = document.getElementById('current-on-ten-result');
+        resultContainer.innerHTML = `
+ <p>Xc: ${result.xc}</p>
+            <p>Xt: ${result.xt}</p>
+            <p>X: ${result.x}</p>
+            <p>Ip0: ${result.ip0}</p>
+
+        `;
+    }
+</script>
+
+</body>
+</html>
