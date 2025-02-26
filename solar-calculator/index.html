@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Калькулятор Сонячної Енергії</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fffbe6; /* Light yellow background */
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        h1 {
+            color: #ff9800; /* Orange title */
+        }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+            color: #555;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        button {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            font-size: 18px;
+            margin-top: 15px;
+            cursor: pointer;
+            border-radius: 8px;
+        }
+        button:hover {
+            background-color: #e68900;
+        }
+        .results {
+            text-align: left;
+            margin-top: 20px;
+            background: #fffbe6;
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .results h2 {
+            color: #333;
+        }
+        .results p {
+            font-size: 16px;
+            color: #444;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Калькулятор Сонячної Енергії</h1>
+    <form action="/calculate" method="post">
+        <label>Середня добова потужність (Pc), МВт:</label>
+        <input type="text" name="dailyPower" required>
+
+        <label>Поточне стандартне відхилення (σ1):</label>
+        <input type="text" name="currentStdDev" required>
+
+        <label>Майбутнє стандартне відхилення (σ2):</label>
+        <input type="text" name="futureStdDev" required>
+
+        <label>Вартість електроенергії (V), грн/кВт⋅год:</label>
+        <input type="text" name="energyCost" required>
+
+        <button type="submit">Розрахувати</button>
+    </form>
+
+    {{ if .W1 }}
+    <div class="results">
+        <h2>Результати:</h2>
+        <h3>До покращення:</h3>
+        <p>Енергія без дисбалансів: {{ printf "%.2f" .W1 }} МВт⋅год</p>
+        <p>Прибуток: {{ printf "%.2f" .ProfitBefore }} грн</p>
+        <p>Штраф: {{ printf "%.2f" .PenaltyBefore }} грн</p>
+        <p><b>Загальний прибуток: {{ printf "%.2f" .FinalProfitBefore }} грн</b></p>
+
+        <h3>Після покращення:</h3>
+        <p>Енергія без дисбалансів: {{ printf "%.2f" .W3 }} МВт⋅год</p>
+        <p>Прибуток: {{ printf "%.2f" .ProfitAfter }} грн</p>
+        <p>Штраф: {{ printf "%.2f" .PenaltyAfter }} грн</p>
+        <p><b>Загальний прибуток: {{ printf "%.2f" .FinalProfitAfter }} грн</b></p>
+    </div>
+    {{ end }}
+</div>
+
+</body>
+</html>
