@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Форма розрахунку</title>
+    <link href="/static/styles.css" rel="stylesheet">
+</head>
+<body>
+
+<h1>Розрахунок пошкоджень та надійності</h1>
+
+<div class="form-container">
+    <div class="form-section">
+        <h2>Розрахунок пошкоджень</h2>
+        <form method="POST" action="/damages">
+            <label>Failure Frequency:</label><input type="text" name="failureFrequency" value="0.01"><br>
+            <label>Restore Time:</label><input type="text" name="restoreTime" value="45.0"><br>
+            <label>Pm:</label><input type="text" name="Pm" value="5.12"><br>
+            <label>Tm:</label><input type="text" name="Tm" value="6451.0"><br>
+            <label>Kp:</label><input type="text" name="Kp" value="4.0"><br>
+            <label>Za:</label><input type="text" name="Za" value="23.6"><br>
+            <label>Zp:</label><input type="text" name="Zp" value="17.6"><br>
+            <input type="submit" value="Розрахувати пошкодження">
+        </form>
+    </div>
+
+    <div class="form-section">
+        <h2>Розрахунок надійності</h2>
+        <form method="POST" action="/reliability">
+            <label>Electric Gas Switch:</label><input type="text" name="electricGasSwitch" value="0.01"><br>
+            <label>PL110:</label><input type="text" name="pl110" value="0.07"><br>
+            <label>Transformer:</label><input type="text" name="transformer" value="0.015"><br>
+            <label>Input Switch:</label><input type="text" name="inputSwitch" value="0.02"><br>
+            <label>Connections:</label><input type="text" name="connections" value="0.18"><br>
+            <label>Electric Gas Switch Time:</label><input type="text" name="electricGasSwitchT" value="30.0"><br>
+            <label>PL110 Time:</label><input type="text" name="pl110T" value="10.0"><br>
+            <label>Transformer Time:</label><input type="text" name="transformerT" value="100.0"><br>
+            <label>Input Switch Time:</label><input type="text" name="inputSwitchT" value="15.0"><br>
+            <label>Connections Time:</label><input type="text" name="connectionsT" value="2.0"><br>
+            <label>Kppmax:</label><input type="text" name="kppmax" value="43.0"><br>
+            <label>Failure Frequency Section Switcher:</label><input type="text" name="failureFreqSectionSwitcher" value="0.02"><br>
+            <input type="submit" value="Розрахувати надійність">
+        </form>
+    </div>
+</div>
+
+{{if .DamagesResult}}
+<div class="results">
+    <h2>Результати розрахунку пошкоджень</h2>
+    <p>MWa: {{.DamagesResult.MWa}}</p>
+    <p>MWp: {{.DamagesResult.MWp}}</p>
+    <p>Mz: {{.DamagesResult.Mz}}</p>
+</div>
+{{end}}
+
+{{if .ReliabilityResult}}
+<div class="results">
+    <h2>Результати розрахунку надійності</h2>
+    <p>Failure Frequency: {{.ReliabilityResult.FailureFrequency}}</p>
+    <p>Average Recovery Duration: {{.ReliabilityResult.AverageRecoveryDuration}}</p>
+    <p>Emergency Coeff: {{.ReliabilityResult.EmergencyCoeff}}</p>
+    <p>Plan Coeff: {{.ReliabilityResult.PlanCoeff}}</p>
+    <p>Failure Frequency for Two Systems: {{.ReliabilityResult.FailureFreqForTwoSys}}</p>
+    <p>Failure Frequency with Section Switcher: {{.ReliabilityResult.FailureFrequencyWithSectionSwitcher}}</p>
+</div>
+{{end}}
+
+</body>
+</html>
