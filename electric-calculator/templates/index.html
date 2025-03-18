@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <title>Розрахунок електроспоживання</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f9fafb;
+      margin: 20px;
+      color: #333;
+    }
+    h1, h2, h3 {
+      color: #2c3e50;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background-color: #fff;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: center;
+    }
+    th {
+      background-color: #f1f3f5;
+      font-weight: bold;
+    }
+    td:first-child {
+      background-color: #e3f2fd;
+      font-weight: bold;
+      color: #1a237e;
+    }
+    td input {
+      width: 80px;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      transition: border-color 0.3s;
+    }
+    td input:focus {
+      border-color: #007bff;
+      outline: none;
+    }
+    button {
+      margin-top: 20px;
+      padding: 12px 20px;
+      font-size: 16px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result-section {
+      background-color: #ffffff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-top: 30px;
+    }
+    .result-section:nth-of-type(even) {
+      background-color: #f1faff;
+    }
+    .result-section h3 {
+      border-bottom: 2px solid #007bff;
+      padding-bottom: 10px;
+      margin-bottom: 15px;
+    }
+    .result-section p {
+      background-color: #fefefe;
+      padding: 10px 15px;
+      border-radius: 6px;
+      box-shadow: 0 1px 5px rgba(0,0,0,0.05);
+      margin-top: 10px;
+    }
+    form {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+  </style>
+</head>
+<body>
+
+<h1>Розрахунок електроспоживання</h1>
+
+<form action="/" method="post">
+  <h2>Параметри обладнання</h2>
+  <table>
+    <tr>
+      <th>Назва</th>
+      <th>η</th>
+      <th>cos φ</th>
+      <th>Uн (кВ)</th>
+      <th>n</th>
+      <th>Pн (кВт)</th>
+      <th>КВ</th>
+      <th>tg φ</th>
+    </tr>
+    {{range .EquipmentList}}
+    <tr>
+      <td>{{.Name}}</td>
+      <td><input type="text" name="eta_{{.Name}}" value="{{.Eta}}"></td>
+      <td><input type="text" name="cosphi_{{.Name}}" value="{{.CosPhi}}"></td>
+      <td><input type="text" name="uh_{{.Name}}" value="{{.UH}}"></td>
+      <td><input type="text" name="n_{{.Name}}" value="{{.N}}"></td>
+      <td><input type="text" name="ph_{{.Name}}" value="{{.PH}}"></td>
+      <td><input type="text" name="kv_{{.Name}}" value="{{.KV}}"></td>
+      <td><input type="text" name="tgphi_{{.Name}}" value="{{.TgPhi}}"></td>
+    </tr>
+    {{end}}
+  </table>
+
+  <button type="submit">Розрахувати</button>
+</form>
+
+<div class="result-section">
+  <h3>Загальні результати</h3>
+  <p><strong>Груповий коефіцієнт використання:</strong> {{printf "%.4f" .GroupKv}}</p>
+  <p><strong>Ефективна кількість:</strong> {{printf "%.4f" .NE}}</p>
+  <p><strong>Розрахунковий коефіцієнт активної потужності:</strong> {{printf "%.4f" .KR}}</p>
+  <p><strong>Розрахункове активне навантаження:</strong> {{printf "%.4f" .Pp}}</p>
+  <p><strong>Розрахункове реактивне навантаження:</strong> {{printf "%.4f" .Qp}}</p>
+  <p><strong>Повна потужність:</strong> {{printf "%.4f" .Sp}}</p>
+  <p><strong>Розрахунковий груповий струм:</strong> {{printf "%.4f" .Ip}}</p>
+</div>
+
+<div class="result-section">
+  <h3>Розрахунки для всього цеху</h3>
+  <p><strong>Коефіцієнт використання цеху в цілому:</strong> {{printf "%.4f" .GroupKvWorkshop}}</p>
+  <p><strong>Ефективна кількість ЕП цеху в цілому:</strong> {{printf "%.4f" .NEWorkshop}}</p>
+  <p><strong>Розрахунковий коефіцієнт активної потужності:</strong> {{printf "%.1f" .KRWorkshop}}</p>
+  <p><strong>Розрахункове активне навантаження на шинах 0,38 кВ:</strong> {{printf "%.1f" .PpWorkshop}}</p>
+  <p><strong>Розрахункове реактивне навантаження на шинах 0,38 кВ:</strong> {{printf "%.1f" .QpWorkshop}}</p>
+  <p><strong>Повна потужність на шинах 0,38 кВ:</strong> {{printf "%.1f" .SpWorkshop}}</p>
+  <p><strong>Розрахунковий груповий струм на шинах 0,38 кВ:</strong> {{printf "%.2f" .IpWorkshop}}</p>
+</div>
+
+</body>
+</html>
